@@ -23,7 +23,6 @@ class HomePageState extends State<HomePage> {
   late Food randomFood;
 
   bool _isLoading = true;
-  bool _isSearching = false;
   String _searchQuery = '';
 
   Future<void> _loadCategoryList() async {
@@ -101,6 +100,28 @@ class HomePageState extends State<HomePage> {
           ? Center(child: CircularProgressIndicator())
           : Column(
               children: [
+                SizedBox(height: 20,),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/favorites");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.pink.shade500, width: 2),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: const Text(
+                      "Favorite Meals",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.pink,
+                      ),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(12),
                   child: TextField(
