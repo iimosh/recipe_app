@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/models/category.dart';
@@ -39,6 +40,18 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _loadCategoryList();
+    requestNotificationPermissions();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        print('Foreground notification: ${message.notification!.title}');
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Notification opened: ${message.notification?.title}');
+      _random();
+    });
   }
 
   void _filterCategories(String query) {
@@ -61,6 +74,21 @@ class HomePageState extends State<HomePage> {
     Food meal= res;
     Navigator.pushNamed(context, "/meal_details", arguments: meal);
 
+  }
+
+  void requestNotificationPermissions() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
+
+    String? token = await messaging.getToken();
+    print('FCM Device Token: $token');
   }
 
   @override
